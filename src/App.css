@@ -1,0 +1,200 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App container */
+.App {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Header styles */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.spot-count {
+  font-size: 0.9rem;
+  background: rgba(0, 255, 0, 0.2);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 0, 0.5);
+}
+
+/* Map container - takes full screen */
+.map-container {
+  flex: 1;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+/* Ensure Leaflet map fills container */
+.map-container .leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Custom marker styles */
+.custom-div-icon {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Popup styles */
+.spot-popup {
+  text-align: center;
+  min-width: 200px;
+}
+
+.spot-popup h3 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.spot-popup p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.spot-popup p strong {
+  color: #333;
+}
+
+.navigate-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.navigate-btn:hover {
+  background: #0056b3;
+}
+
+/* Floating refresh button */
+.refresh-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.refresh-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.refresh-btn:active {
+  transform: scale(0.95);
+}
+
+/* Leaflet popup adjustments */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .header {
+    padding: 8px 16px;
+  }
+  
+  .header h1 {
+    font-size: 1.2rem;
+  }
+  
+  .spot-count {
+    font-size: 0.8rem;
+  }
+  
+  .refresh-btn {
+    width: 50px;
+    height: 50px;
+    bottom: 16px;
+    right: 16px;
+    font-size: 1rem;
+  }
+  
+  .spot-popup {
+    min-width: 180px;
+  }
+}
+
+/* Loading state - if needed later */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
+}

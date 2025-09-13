@@ -2,6 +2,10 @@
 
 Your AI-powered parking coordination app that matches drivers leaving spots with those searching for parking in real-time.
 
+## 📊 Status
+
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/rafaelmaranon/Availo?utm_source=oss&utm_medium=github&utm_campaign=rafaelmaranon%2FAvailo&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
 ## 🎯 What Makes Availo Special
 
 **AI Teammate Approach**: Unlike simple CRUD apps, Availo features an AI agent that reasons about time overlap, location matching, and provides friendly human responses. You can see the AI "thinking" in real-time through console logging.

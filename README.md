@@ -110,6 +110,17 @@ With spot details and "📋 Copy Coordinates" button for GPS navigation.
 4. **Real-time Backend**: Convex integration for live updates
 5. **Push Notifications**: Alerts for claimed spots
 
+## ☁️ Cloud Development with Daytona
+
+Availo is ready for instant cloud development and collaboration through Daytona workspaces:
+
+- **[📋 Daytona Setup Guide](docs/daytona-proof.md)** - Complete workspace configuration and proof of concept
+- **Zero Setup**: Clone, configure environment variables, and start developing
+- **HTTPS Preview**: Test GPS and voice features in secure cloud environment
+- **Team Collaboration**: Invite teammates for real-time collaborative development
+
+Perfect for testing location-based features and sharing live demos without local setup complexity.
+
 ## 🎭 Demo Script (1 minute)
 
 ```

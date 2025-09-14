@@ -88,26 +88,18 @@ html, body {
   min-width: 180px;
 }
 
-.seeking-btn {
-  background: rgba(255, 107, 53, 0.9);
+.universal-btn {
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
   color: white;
+  font-size: 1.1rem;
+  min-width: 200px;
+  padding: 16px 24px;
 }
 
-.seeking-btn:hover {
-  background: rgba(255, 107, 53, 1);
+.universal-btn:hover {
+  background: linear-gradient(135deg, #44a08d 0%, #4ecdc4 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
-}
-
-.offering-btn {
-  background: rgba(78, 205, 196, 0.9);
-  color: white;
-}
-
-.offering-btn:hover {
-  background: rgba(78, 205, 196, 1);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(78, 205, 196, 0.4);
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
 }
 
 /* Form overlay */

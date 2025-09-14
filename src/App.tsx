@@ -155,6 +155,8 @@ function App() {
   }, [seekingDrivers, offeringDrivers])
 
   const handleVoiceInput = async () => {
+    console.log('🎤 Voice input started')
+    
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       alert('Speech recognition not supported in this browser')
       return
@@ -168,26 +170,34 @@ function App() {
     recognition.lang = 'en-US'
     
     setIsListening(true)
+    console.log('🎤 Listening started...')
     
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript
+      console.log('🎤 Speech recognized:', transcript)
       setVoiceMessage(transcript)
       setIsListening(false)
       
       // Auto-submit after getting voice message
-      setTimeout(() => handleSubmit(transcript), 500)
+      setTimeout(() => {
+        console.log('🎤 Auto-submitting message:', transcript)
+        handleSubmit(transcript)
+      }, 500)
     }
     
-    recognition.onerror = () => {
+    recognition.onerror = (error: any) => {
+      console.error('🎤 Speech recognition error:', error)
       setIsListening(false)
-      alert('Voice recognition error. Please try again.')
+      alert(`Voice recognition error: ${error.error}. Please try again.`)
     }
     
     recognition.onend = () => {
+      console.log('🎤 Speech recognition ended')
       setIsListening(false)
     }
     
     recognition.start()
+    console.log('🎤 Recognition object started')
   }
 
   // Known locations with coordinates (SF area)
@@ -209,6 +219,39 @@ function App() {
     return locations[normalized] || userLocation || {lat: 37.7749, lng: -122.4194}
   }
 
+  // AI Intent Detection - determine if user is seeking or offering parking
+  const detectIntent = (message: string) => {
+    const lowerMessage = message.toLowerCase()
+    
+    // Offering keywords (leaving, departing)
+    const offeringKeywords = [
+      'leaving', 'departing', 'going home', 'done', 'finished',
+      'my car', 'my spot', 'available', 'free up', 'vacating'
+    ]
+    
+    // Seeking keywords (need, looking for, going to)
+    const seekingKeywords = [
+      'need parking', 'looking for', 'need a spot', 'going to', 
+      'heading to', 'driving to', 'need to park', 'finding parking'
+    ]
+    
+    const offeringScore = offeringKeywords.filter(keyword => lowerMessage.includes(keyword)).length
+    const seekingScore = seekingKeywords.filter(keyword => lowerMessage.includes(keyword)).length
+    
+    // If we find "leaving" or "I am at" patterns, it's likely offering
+    if (lowerMessage.match(/(?:leaving|departing|I am at|I'm at|my car)/)) {
+      return 'offering'
+    }
+    
+    // If we find "going to" or "need" patterns, it's likely seeking  
+    if (lowerMessage.match(/(?:going to|need|looking for|heading to|driving to)/)) {
+      return 'seeking'
+    }
+    
+    // Default based on scores
+    return offeringScore > seekingScore ? 'offering' : 'seeking'
+  }
+
   const handleSubmit = async (transcript?: string) => {
     const message = transcript || voiceMessage
     if (!message.trim()) {
@@ -217,11 +260,14 @@ function App() {
     }
 
     const driverName = generateDriverName()
+    const detectedMode = detectIntent(message)
+    
+    console.log(`AI detected intent: ${detectedMode} for message: "${message}"`)
 
     try {
-      if (driverMode === 'seeking') {
+      if (detectedMode === 'seeking') {
         // Enhanced parsing for seeking
-        const destination = message.match(/(?:to|at|near|going to) ([^,\.]+)/i)?.[1] || 'Not specified'
+        const destination = message.match(/(?:to|at|near|going to|heading to|driving to) ([^,\.]+)/i)?.[1] || 'Not specified'
         const arrivalTime = message.match(/(?:in|about) (\d+[^,\.]*(?:min|minute))/i)?.[1] || '5 minutes'
         const duration = message.match(/(?:for) ([^,\.]*(?:hour|hr|min))/i)?.[1] || '2 hours'
         
@@ -238,7 +284,7 @@ function App() {
           lng: coords.lng,
         })
         
-        console.log(`Created seeking request for ${driverName} at ${destination}`)
+        console.log(`✅ Created seeking request for ${driverName} going to ${destination}`)
       } else {
         // Enhanced parsing for offering - handle multiple "leaving [location]" patterns
         console.log('Processing offering message:', message)
@@ -292,26 +338,17 @@ function App() {
         <span className="subtitle">Your AI teammate coordinates the handoff when you say you're leaving or searching</span>
       </div>
 
-      {/* Action buttons */}
+      {/* Single universal voice button */}
       {!showForm && (
         <div className="action-buttons">
           <button 
-            className="action-btn seeking-btn"
+            className="action-btn universal-btn"
             onClick={() => {
-              setDriverMode('seeking')
+              setDriverMode(null) // Let AI determine mode from speech
               setShowForm(true)
             }}
           >
-            🔍 I Need Parking
-          </button>
-          <button 
-            className="action-btn offering-btn"
-            onClick={() => {
-              setDriverMode('offering')
-              setShowForm(true)
-            }}
-          >
-            🅿️ I'm Leaving Soon
+            🎤 Talk to Availo
           </button>
         </div>
       )}
@@ -341,6 +378,44 @@ function App() {
                 <small>AI processing...</small>
               </div>
             )}
+
+            {/* Test button for debugging */}
+            <button 
+              onClick={async () => {
+                console.log('🧪 Testing database with manual entry')
+                try {
+                  await createOfferingRequest({
+                    driver_name: 'TestUser',
+                    location_description: 'dolores park',
+                    car_brand: 'toyota',
+                    car_color: 'blue',
+                    estimated_leave_time: '5 minutes',
+                    voice_message: 'Test message - leaving Dolores Park in 5 minutes',
+                    exact_location_known: true,
+                    lat: 37.7596,
+                    lng: -122.4269,
+                  })
+                  console.log('✅ Test entry created successfully!')
+                  setShowForm(false)
+                  setVoiceMessage('')
+                  setDriverMode(null)
+                } catch (error) {
+                  console.error('❌ Test entry failed:', error)
+                  alert(`Database test failed: ${error}`)
+                }
+              }}
+              style={{
+                background: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                marginTop: '10px'
+              }}
+            >
+              🧪 Test Database
+            </button>
 
             {/* Close button */}
             <button 
@@ -474,16 +549,6 @@ function App() {
         </MapContainer>
       </div>
 
-      {/* Floating refresh button */}
-      <button 
-        className="refresh-btn"
-        onClick={() => {
-          seedDemoData()
-          setAiMessages(prev => [...prev, '🔄 AI: Loading demo scenario with multiple drivers...'])
-        }}
-      >
-        🔄 Demo AI Negotiation
-      </button>
     </div>
   )
 }

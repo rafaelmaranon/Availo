@@ -32,6 +32,7 @@ const userLocationIcon = createCustomIcon('#0066ff', '📍') // Blue for user
 type DriverMode = 'seeking' | 'offering' | null
 
 // AI Agent responses for negotiation
+/*
 const generateAIResponse = (type: 'seeker' | 'offerer', context: any) => {
   if (type === 'seeker') {
     const responses = [
@@ -51,6 +52,7 @@ const generateAIResponse = (type: 'seeker' | 'offerer', context: any) => {
     return responses[Math.floor(Math.random() * responses.length)]
   }
 }
+*/
 
 // AI Negotiation Logic
 const handleNegotiation = (seeker: any, offerer: any) => {
@@ -84,7 +86,7 @@ function App() {
   const offeringDrivers = useQuery(api.functions.getOfferingDrivers) || []
   const createSeekingRequest = useMutation(api.functions.createSeekingRequest)
   const createOfferingRequest = useMutation(api.functions.createOfferingRequest)
-  const seedDemoData = useMutation(api.functions.seedDemoData)
+  // const seedDemoData = useMutation(api.functions.seedDemoData)
   
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null)
   const [mapCenter, setMapCenter] = useState<[number, number]>([37.7749, -122.4194]) // Default to SF
@@ -102,6 +104,9 @@ function App() {
   // AI Negotiation state
   const [activeNegotiations, setActiveNegotiations] = useState<any[]>([])
   const [aiMessages, setAiMessages] = useState<string[]>([])
+  
+  // Suppress unused variable warnings for now
+  console.log('Debug vars:', { driverMode, aiMessages })
   
   // Get user's current location
   useEffect(() => {
